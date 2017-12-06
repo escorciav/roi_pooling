@@ -1,17 +1,18 @@
 """TODO
 """
-from torch.autograd import Function
+
 import torch
+from torch.autograd import Function
+from torch.autograd.function import once_differentiable
 import torch.nn.functional as F
-from torch.nn.modules.utils import _pair
 from pyinn.utils import Dtype, Stream, load_kernel
 
 CUDA_NUM_THREADS = 1024
 
 kernel_loop = '''
-#define CUDA_KERNEL_LOOP(i, n)                        \
+#define CUDA_KERNEL_LOOP(i, n) \
   for (int i = blockIdx.x * blockDim.x + threadIdx.x; \
-       i < (n);                                       \
+       i < (n); \
        i += blockDim.x * gridDim.x)
 '''
 
@@ -176,17 +177,12 @@ class ROIPooling2d(Function):
         `~pytorch.autograd.Variable`: Output variable.
     """
 
-    def __init__(self, output_size, spatial_scale=1.0):
-        super(ROIPooling2d, self).__init__()
-        self.output_h, self.output_w = _pair(output_size)
-        self.output_size = output_size
+    @staticmethod
+    def forward(self, input, rois, output_size=(7, 7), spatial_scale=1.0):
+        self.output_h, self.output_w = output_size
         self.spatial_scale = spatial_scale
-        self.argmax_data = None
-        self.input_size = None
-
-    def forward(self, input, rois):
         assert input.dim() == 4 and input.is_cuda
-        assert rois.dim() == 2 and rois.is_cuda
+        assert rois.dim() == 2 and rois.size(1) == 5 and rois.is_cuda
         _, channels, height, width = input.size()
         num_rois, _ = rois.size()
 
@@ -213,6 +209,8 @@ class ROIPooling2d(Function):
         self.input_size = input.size()
         return output
 
+    @staticmethod
+    @once_differentiable
     def backward(self, grad_output):
         assert grad_output.is_cuda
         rois, = self.saved_tensors
@@ -220,7 +218,7 @@ class ROIPooling2d(Function):
         num_rois = rois.size()[0]
         batch_size, channels, height, width = self.input_size
 
-        grad_rois = None
+        grad_input = grad_rois = None
         grad_input = grad_output.new(batch_size, channels, height, width)
         n = grad_input.numel()
         with torch.cuda.device_of(grad_output):
@@ -240,14 +238,14 @@ class ROIPooling2d(Function):
                     rois.data_ptr(), grad_input.data_ptr()],
               stream=Stream(ptr=torch.cuda.current_stream().cuda_stream))
 
-        return grad_input, grad_rois
+        return grad_input, grad_rois, None, None
 
 
 def roi_pooling_2d(input, rois, output_size=(7, 7), spatial_scale=1.0):
     r"""Applies a 2D ROI pooling over an input signal composed of several input
     planes and a set of regions parametrized as indices and bounding boxes
 
-    See :class:`~ROIPooling2D` for details and output shape.
+    See :class:`~ROIPooling2d` for details and output shape.
 
     Args:
         output_size (int or tuple): the target output size of the image of the
@@ -255,11 +253,11 @@ def roi_pooling_2d(input, rois, output_size=(7, 7), spatial_scale=1.0):
             image H x H.
         spatial_scale (float): scale of the rois if resized.
     """
-    return ROIPooling2d(output_size, spatial_scale)(input, rois)
+    return ROIPooling2d.apply(input, rois, output_size, spatial_scale)
 
 
-def roi_pooling_2d_naive(input, rois, output_size=(7, 7), spatial_scale=1.0):
-    """Naive Spatial Region of Interest (ROI) pooling function.
+def roi_pooling_2d_pytorch(input, rois, output_size=(7, 7), spatial_scale=1.0):
+    """Spatial Region of Interest (ROI) pooling function in pure pytorch/python
 
     This function acts similarly to `~roi_pooling_2d`, but performs a python
     loop over ROI. Note that this is not a direct replacement of

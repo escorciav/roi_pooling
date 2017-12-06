@@ -1,3 +1,4 @@
+"Test foward and backward for ROIPooling"
 import unittest
 
 import numpy as np
@@ -5,7 +6,8 @@ import torch
 from torch.autograd import Variable
 from torch.autograd import gradcheck
 
-from roi_pooling import ROIPooling2d, roi_pooling_2d, roi_pooling_2d_naive
+from roi_pooling.functions.roi_pooling import roi_pooling_2d
+from roi_pooling.functions.roi_pooling import roi_pooling_2d_pytorch
 
 
 class TestROIPooling2D(unittest.TestCase):
@@ -15,6 +17,8 @@ class TestROIPooling2D(unittest.TestCase):
         self.batch_size = 3
         self.n_channels = 4
         self.input_size = (12, 8)
+        self.output_size = (5, 7)
+        self.spatial_scale = 0.6
         x_np = np.arange(self.batch_size * self.n_channels *
                          self.input_size[0] * self.input_size[1],
                          dtype=np.float32)
@@ -28,8 +32,6 @@ class TestROIPooling2D(unittest.TestCase):
             [1, 3, 1, 5, 10],
             [0, 3, 3, 3, 3]
         ])
-        self.output_size = (5, 7)
-        self.spatial_scale = 0.6
         self.n_rois = self.rois.shape[0]
 
     def check_forward(self, x_var, rois_var):
@@ -49,7 +51,7 @@ class TestROIPooling2D(unittest.TestCase):
         y_var = roi_pooling_2d(
             x_var, rois_var, self.output_size,
             spatial_scale=self.spatial_scale)
-        d_y = roi_pooling_2d_naive(
+        d_y = roi_pooling_2d_pytorch(
             x_var, rois_var, self.output_size, self.spatial_scale)
         np.testing.assert_almost_equal(y_var.data.cpu().numpy(),
                                        d_y.data.cpu().numpy())
