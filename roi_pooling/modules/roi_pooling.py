@@ -3,7 +3,8 @@
 import torch.nn as nn
 from torch.nn.modules.utils import _pair
 
-from ..functions import roi_pooling_2d, roi_pooling_2d_pytorch
+from ..functions.roi_pooling import roi_pooling_2d
+from ..functions.roi_pooling import roi_pooling_2d_pytorch
 
 
 class ROIPooling2d(nn.Module):
