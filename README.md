@@ -8,7 +8,7 @@ This is a generic implementation of ROIpooling operation used in the context of 
 
 - Modularized
 
-- JIT compilation with pyinn and cupy
+- JIT compilation with [pyinn](https://github.com/szagoruyko/pyinn) and [cupy](https://cupy.chainer.org/)
 
 - Works well with batches of images :wink:
 
@@ -17,15 +17,55 @@ This is a generic implementation of ROIpooling operation used in the context of 
 Support me, gimme a :star: in the github banner or invite me a :coffee:/:beer:. If you are in academia, I would appreciate that you cite my research:
 
 ```
-Actor-Supervision
+@article{EscorciaDJGS18,
+  author    = {Victor Escorcia and
+               Cuong Duc Dao and
+               Mihir Jain and
+               Bernard Ghanem and
+               Cees Snoek},
+  title     = {Guess Where? Actor-Supervision for Spatiotemporal Action Localization},
+  journal   = {CoRR},
+  volume    = {abs/1804.01824},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1804.01824},
+  archivePrefix = {arXiv},
+  eprint    = {1804.01824}
+}
 ```
 
 This implementation was built on top of previous amazing work, thus you _must_ cite the following papers:
 
 ```
-FastRCNN
-Sergey work
+@article{RenHG017,
+  author    = {Shaoqing Ren and
+               Kaiming He and
+               Ross B. Girshick and
+               Jian Sun},
+  title     = {Faster {R-CNN:} Towards Real-Time Object Detection with Region Proposal
+               Networks},
+  journal   = {{IEEE} Trans. Pattern Anal. Mach. Intell.},
+  volume    = {39},
+  number    = {6},
+  pages     = {1137--1149},
+  year      = {2017},
+  url       = {https://doi.org/10.1109/TPAMI.2016.2577031},
+  doi       = {10.1109/TPAMI.2016.2577031}
+}
+
+@article{ZagoruykoK17,
+  author    = {Sergey Zagoruyko and
+               Nikos Komodakis},
+  title     = {DiracNets: Training Very Deep Neural Networks Without Skip-Connections},
+  journal   = {CoRR},
+  volume    = {abs/1706.00388},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1706.00388},
+  archivePrefix = {arXiv},
+  eprint    = {1706.00388}
+}
 ```
+
+This is also possible due to [Chainer](https://chainer.org/) and [PyTorch](https://pytorch.org/).
 
 ## FAQs
 
