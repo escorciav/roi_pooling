@@ -32,6 +32,10 @@ We need the following requirements `cuda`, `pytorch==1.0.1`, `cupy=5.1.0` which 
 
     Hopefully everything runs like the breeze.
 
+### Can I use it in Colab?
+
+Sure, take a look at this [notebook](https://colab.research.google.com/drive/1zoZKhWynAwnXJAWGTfOiU2-kbc4FH2EM). It provides a guide for the setup and usage of the `roi_pooling` `Function`.
+
 ## LICENSE
 
 [MIT](https://choosealicense.com/licenses/mit/)
