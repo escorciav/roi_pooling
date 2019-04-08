@@ -8,11 +8,37 @@ This is a generic implementation of ROIpooling operation used in the context of 
 
 - Modularized
 
-- JIT compilation with [pyinn](https://github.com/szagoruyko/pyinn) and [cupy](https://cupy.chainer.org/)
+- JIT compilation with cupy
 
 - Works well with batches of images :wink:
 
-## Did you like it?
+## Getting started
+
+We need the following requirements `cuda`, `pytorch==1.0.1`, `cupy=5.1.0` which we can get most of them from [anaconda.org](http://anaconda.org/) with trusted channels.
+
+1. Install anaconda or miniconda.
+
+    > Skip this if you already have miniconda or anaconda installed in your system.
+
+1. Create a new environment
+
+    `conda create -n pytorch-extensions python=3.7 pytorch cupy -c pytorch`
+
+    > This step creates a conda environment called `pytorch-extensions`. In case, you change the name keep it mind to update the next lines accordingly.
+
+1. `conda activate pytorch-extensions`
+
+1. `python example.py`
+
+    Hopefully everything runs like the breeze.
+
+## LICENSE
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+We highly appreciate that you leave attribution notes when you copy portions of this codebase in yours.
+
+### Did you like it?
 
 Support me, gimme a :star: in the github banner or invite me a :coffee:/:beer:. If you are in academia, I would appreciate that you cite my research:
 
@@ -33,7 +59,7 @@ Support me, gimme a :star: in the github banner or invite me a :coffee:/:beer:. 
 }
 ```
 
-This implementation was built on top of previous amazing work, thus you _must_ cite the following papers:
+This implementation was built on top of the legendary Faster-RCNN which you _must_ cite:
 
 ```
 @article{RenHG017,
@@ -51,21 +77,9 @@ This implementation was built on top of previous amazing work, thus you _must_ c
   url       = {https://doi.org/10.1109/TPAMI.2016.2577031},
   doi       = {10.1109/TPAMI.2016.2577031}
 }
-
-@article{ZagoruykoK17,
-  author    = {Sergey Zagoruyko and
-               Nikos Komodakis},
-  title     = {DiracNets: Training Very Deep Neural Networks Without Skip-Connections},
-  journal   = {CoRR},
-  volume    = {abs/1706.00388},
-  year      = {2017},
-  url       = {http://arxiv.org/abs/1706.00388},
-  archivePrefix = {arXiv},
-  eprint    = {1706.00388}
-}
 ```
 
-This is also possible due to [Chainer](https://chainer.org/) and [PyTorch](https://pytorch.org/).
+This was also possible due to [Chainer](https://chainer.org/), and the easy to follow [pyinn](https://github.com/szagoruyko/pyinn).
 
 ## FAQs
 
@@ -93,4 +107,4 @@ _Why didn't you remove the conditional?_
 
 I tried in one of the repos but it fails. I even removed all the binaries and compiled again but it still returned zeros. Thus, I just moved on and pursue my personal reason:
 
-I was really curious of launching cupy kernels using data from pytorch tensors. It is simply amazing. Moreover, it was a great experience to expose myself to CUDA and pytorch.autograd.
+I was really curious of launching cupy kernels using data from pytorch tensors. It is simply amazing. Moreover, it was a great experience to explore CUDA and pytorch.autograd.

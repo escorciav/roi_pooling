@@ -1,11 +1,32 @@
-"""TODO
+"""ROIPooling function and kernel
+
+Modified work:
+-------------------------------------------------------------------------------
+Copyright (c) 2019 Victor Escorcia
+-------------------------------------------------------------------------------
+
+Original from work of _roipooling_kernel and
+_roipooling_kernel_backward_grad_input:
+-------------------------------------------------------------------------------
+Copyright (c) 2015 Preferred Infrastructure, Inc.
+Copyright (c) 2015 Preferred Networks, Inc.
+Licensed under The MIT License [see chainer/LICENSE for details]
+-------------------------------------------------------------------------------
+
+First version of CUDA kernel comes from:
+-------------------------------------------------------------------------------
+Fast R-CNN
+Copyright (c) 2015 Microsoft
+Licensed under The MIT License [see fast-rcnn/LICENSE for details]
+Written by Ross Girshick
+-------------------------------------------------------------------------------
 """
 
 import torch
 from torch.autograd import Function
 from torch.autograd.function import once_differentiable
 import torch.nn.functional as F
-from pyinn.utils import Dtype, Stream, load_kernel
+from ..utils import Dtype, Stream, load_kernel
 
 CUDA_NUM_THREADS = 1024
 
